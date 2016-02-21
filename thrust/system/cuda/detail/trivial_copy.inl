@@ -86,7 +86,12 @@ void trivial_copy_n(execution_policy<DerivedPolicy> &exec,
   void *dst = thrust::raw_pointer_cast(&*result);
   const void *src = thrust::raw_pointer_cast(&*first);
 
-  trivial_copy_detail::checked_cudaMemcpyAsync(dst, src, n * sizeof(T), cudaMemcpyDeviceToDevice, stream(thrust::detail::derived_cast(exec)));
+  // since the user may have given thrust::cuda::par to thrust::copy explicitly,
+  // this copy may be a cross-space copy that has bypassed system dispatch
+  // we need to have cudaMemcpyAsync figure out the directionality of the copy dynamically
+  // using cudaMemcpyDefault
+
+  trivial_copy_detail::checked_cudaMemcpyAsync(dst, src, n * sizeof(T), cudaMemcpyDefault, stream(thrust::detail::derived_cast(exec)));
 #else
   thrust::transform(exec, first, first + n, result, thrust::identity<T>());
 #endif
@@ -110,9 +115,9 @@ void trivial_copy_n(cross_system<System1,System2> &systems,
 
   cudaMemcpyKind kind = trivial_copy_detail::cuda_memcpy_kind(thrust::detail::derived_cast(systems.system1), thrust::detail::derived_cast(systems.system2));
 
-  // XXX use stream 0 for now
+  // XXX use the globally-blocking legacy stream for now
   //     we may wish to enable async host <-> device copy in the future
-  trivial_copy_detail::checked_cudaMemcpyAsync(dst, src, n * sizeof(T), kind, 0);
+  trivial_copy_detail::checked_cudaMemcpyAsync(dst, src, n * sizeof(T), kind, legacy_stream());
 }
 
 

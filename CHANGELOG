@@ -2,7 +2,62 @@
 #           Thrust v1.9.0             #
 #######################################
 
-TODO
+Summary
+    TODO
+
+Breaking API Changes
+    None.
+
+New Features
+    TODO
+
+New Examples
+    TODO
+
+Other Enhancements
+    If C++11 support is enabled, functors do not have to inherit from thrust::unary_function/thrust::binary_function anymore when using them with thrust::transform_iterator.
+    The performance of thrust::unique* is improved.
+
+Bug Fixes
+    TODO
+
+Known Issues
+    TODO
+
+Acknowledgments
+    Thanks to Manuel Schiller for contributing a C++11 based enhancement regarding the deduction of functor return types and improving the performance of thrust::unique. 
+
+#######################################
+#           Thrust v1.8.3             #
+#######################################
+
+Summary
+    Small bug fixes
+
+New Examples
+  range_view demonstrates use of a view: a non-owning wrapper for an iterator range with a container-like interface
+
+Bug Fixes
+    TODO
+
+Known Issues
+    TODO
+
+#######################################
+#           Thrust v1.8.2             #
+#######################################
+
+Summary
+    Small bug fixes
+
+Bug Fixes
+    Avoid warnings and errors concerning user functions called from __host__ __device__ functions
+    #632 CUDA set_intersection_by_key error
+    #651 thrust::copy between host & device is not interoperable with thrust::cuda::par.on(stream)
+    #664 CUDA for_each ignores execution policy's stream
+
+Known Issues
+    #628 CUDA's reduce_by_key fails on sm_50 devices
 
 #######################################
 #           Thrust v1.8.1             #
